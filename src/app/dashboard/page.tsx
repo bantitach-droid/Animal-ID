@@ -47,8 +47,14 @@ export default function DashboardPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this pet card?")) return;
-    await fetch(`/api/pets/${id}`, { method: "DELETE" });
-    setPets(pets.filter((p) => p.id !== id));
+    try {
+      const res = await fetch(`/api/pets/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setPets(pets.filter((p) => p.id !== id));
+      }
+    } catch {
+      // ignore network errors
+    }
   };
 
   if (status === "loading" || loading) {
